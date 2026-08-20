@@ -19,10 +19,8 @@
   }
 }
 
-.removeButton {
-  @apply h-8 mr-4 px-2.5 border-2 border-gray-500 rounded-[5px] transition-colors duration-300
-    hover:border-gray-300
-    focus-visible:outline-2 focus-visible:outline-gray-500 focus-visible:outline-offset-2;
+.menuButton {
+  @apply m-10 border-2 border-fuchsia-700 rounded-md p-2;
 }
 
 h1 {
