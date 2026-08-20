@@ -3,12 +3,11 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  type ButtonID = {
-    id: `${string}-${string}-${string}-${string}-${string}`;
-    count: number;
-  };
+  type UUID = `${string}-${string}-${string}-${string}-${string}`;
+  type ButtonData = { id: UUID; count: number };
+  type ButtonProps = { buttonData: ButtonData };
 
-  const [buttonsData, setButtonsData] = useState<ButtonID[]>([
+  const [buttonsData, setButtonsData] = useState<ButtonData[]>([
     { id: crypto.randomUUID(), count: 0 },
   ]);
 
@@ -51,8 +50,8 @@ function App() {
     return <>Klickat {count} gånger</>;
   }
 
-  function removebutton(buttonid: ButtonID) {
-    const buttonValue = buttonsData.filter((id) => id == buttonid).at(0);
+  function removebutton(buttonData: ButtonData) {
+    const buttonValue = buttonsData.filter((data) => data == buttonData).at(0);
     let buttonCount = 0;
     if (buttonValue) {
       buttonCount = buttonValue?.count;
@@ -62,7 +61,7 @@ function App() {
 
     updateVisibleTotalOnRemove(buttonCount);
     setButtonsData((currentButtonIDs) =>
-      currentButtonIDs.filter((id) => id !== buttonid),
+      currentButtonIDs.filter((id) => id !== buttonData),
     );
   }
 
@@ -77,6 +76,37 @@ function App() {
   //     total = 0;
   //   }
   // }
+
+  // function Car({ brand, year, isElectric, onSell }: CarProps) {
+  //   return (
+
+  function Button(props: ButtonProps) {
+    const data = props.buttonData;
+    const { id, count } = props.buttonData;
+
+    return (
+      <>
+        <button
+          key={id}
+          type="button"
+          disabled={count >= 3}
+          className="counter min-w-44"
+          onClick={() => {
+            addClick(data);
+          }}
+        >
+          {PrintCount(count)}
+        </button>
+        <button
+          type="button"
+          className="removeButton"
+          onClick={() => removebutton(data)}
+        >
+          X
+        </button>
+      </>
+    );
+  }
 
   function resetCounters() {
     setButtonsData((prev) =>
@@ -97,25 +127,8 @@ function App() {
     return (
       <div className="flex flex-row flex-wrap ">
         {buttonsData.map((buttonData) => (
-          <div>
-            <button
-              key={buttonData.id}
-              type="button"
-              disabled={buttonData.count >= 3}
-              className="counter min-w-44"
-              onClick={() => {
-                addClick(buttonData);
-              }}
-            >
-              {PrintCount(buttonData.count)}
-            </button>
-            <button
-              type="button"
-              className="removeButton"
-              onClick={() => removebutton(buttonData)}
-            >
-              X
-            </button>
+          <div key={buttonData.id}>
+            <Button buttonData={buttonData}></Button>
           </div>
         ))}
       </div>
